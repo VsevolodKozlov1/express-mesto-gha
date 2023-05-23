@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" href="pages/index.css"> -->
+  <title>Место</title>
+  <meta name="description" content="Место">
+  <meta name="author" content="Всеволод Козлов">
+</head>
+
+<body class="page">
+  <header class="header">
+    <img src="<%=require('./images/header-logo.svg')%>" alt="Логотип" class="header__logo">
+    <!-- <img src="images/header-logo.svg" alt="Логотип" class="header__logo"> -->
+  </header>
+  <main class="content">
+    <section class="profile">
+      <img src="#" alt="Аватар" class="profile__avatar">
+      <div class="profile__avatar-hover">
+        <img src="<%=require('./images/edit-icon_big.svg')%>" alt="" class="profile__avatar-change">
+        <!-- <img src="./images/edit-icon_big.svg" alt="" class="profile__avatar-change"> -->
+      </div>
+      <div class="profile__info">
+        <h1 class="profile__name"></h1>
+        <button type="button" class="profile__edit-button button-hover">
+          <img src="<%=require('./images/edit-icon.svg')%>" alt="Редактировать" class="profile__edit-icon">
+          <!-- <img src="images/edit-icon.svg" alt="Редактировать" class="profile__edit-icon"> -->
+        </button>
+        <p class="profile__about-me"></p>
+      </div>
+      <button type="button" class="profile__add-button button-hover">
+        <img src="<%=require('./images/add-icon.svg')%>" alt="Добавить" class="profile__add-icon">
+        <!-- <img src="images/add-icon.svg" alt="Добавить" class="profile__add-icon"> -->
+      </button>
+    </section>
+    <section class="gallery"></section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer__copyright">© 2022 Mesto Russia</p>
+  </footer>
+
+  <template class="gallery-item-template">
+    <div class="gallery__item">
+      <div class="gallery__img-placeholder">
+        <img src="#" alt="" class="gallery__photo">
+      </div>
+      <button type="button" class="gallery__del-button button-hover"></button>
+      <div class="gallery__caption">
+        <h2 class="gallery__item-descr"></h2>
+        <div class="gallery__like">
+          <button type="button" class="gallery__like-button button-hover"></button>
+          <p class="gallery__like-counter"></p>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <div class="popup popup_section_profile">
+    <div class="popup__container">
+      <h2 class="popup__header">Редактировать профиль</h2>
+      <form class="popup__form popup__form_section_profile" name="profile-edit-form" novalidate>
+        <input type="text" class="popup__input popup__input_personal-data_name" name="personal-data_name"
+          placeholder="Имя" required minlength="2" maxlength="40">
+        <span class="popup__span-error popup__span-error_personal-data_name"></span>
+        <input type="text" class="popup__input popup__input_personal-data_about-me" name="personal-data_about-me"
+          placeholder="О себе" required minlength="2" maxlength="200">
+        <span class="popup__span-error popup__span-error_personal-data_about-me"></span>
+        <input type="submit" class="popup__submit popup__submit_section_profile button-hover" value="Сохранить">
+      </form>
+      <button type="button" class="popup__close-button button-hover"></button>
+    </div>
+  </div>
+
+  <div class="popup popup_section_avatar">
+    <div class="popup__container popup__container_avatar">
+      <h2 class="popup__header">Обновить аватар</h2>
+      <form class="popup__form popup__form_section_avatar" name="avatar-change-form" novalidate>
+        <input type="url" class="popup__input popup__input_avatar_link" name="avatar_link" placeholder="Укажите ссылку"
+          required>
+        <span class="popup__span-error popup__span-error_avatar_link"></span>
+        <input type="submit" class="popup__submit popup__submit_section_avatar button-hover" value="Сохранить">
+      </form>
+      <button type="button" class="popup__close-button button-hover"></button>
+    </div>
+  </div>
+
+  <div class="popup popup_section_gallery">
+    <div class="popup__container">
+      <h2 class="popup__header">Новое место</h2>
+      <form class="popup__form popup__form_section_gallery" name="card-add-form" novalidate>
+        <input type="text" class="popup__input popup__input_card_name" name="card_name" placeholder="Название" required
+          minlength="2" maxlength="30">
+        <span class="popup__span-error popup__span-error_card_name"></span>
+        <input type="url" class="popup__input popup__input_card_link" name="card_link" placeholder="Ссылка на картинку"
+          required>
+        <span class="popup__span-error popup__span-error_card_link"></span>
+        <input type="submit" class="popup__submit popup__submit_section_gallery button-hover" value="Создать">
+      </form>
+      <button type="button" class="popup__close-button button-hover"></button>
+    </div>
+  </div>
+
+  <div class="popup popup_section_delete-card">
+    <div class="popup__container popup__container_confirm">
+      <h2 class="popup__header">Вы уверены?</h2>
+      <form class="popup__form popup__form_section_delete-card" name="card-delete-form" novalidate>
+        <input type="submit" class="popup__submit popup__submit_confirm popup__submit_section_delete-card button-hover"
+          value="Да">
+      </form>
+      <button type="button" class="popup__close-button button-hover"></button>
+    </div>
+  </div>
+
+  <div class="popup popup_section_zoom-in">
+    <div class="popup__figure">
+      <img class="popup__photo" src="#" alt="">
+      <p class="popup__caption"></p>
+      <button type="button" class="popup__close-button button-hover"></button>
+    </div>
+  </div>
+  <!-- <script src="pages/index.js" type="module"></script> -->
+</body>
+
+</html>
