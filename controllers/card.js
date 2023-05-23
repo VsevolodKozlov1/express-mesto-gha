@@ -33,10 +33,13 @@ module.exports.deleteCardById = (req, res) => Card.findByIdAndRemove(req.params.
     if (!card) return res.status(NOT_FOUND_CODE).send({ message: 'Карточка не найдена' });
     return res.send(card);
   })
-  .catch((err) => res.status(SERVER_ERROR_CODE).send({
-    message: `Неизвестная ошибка ${err.name}: ${err.message}.
+  .catch((err) => {
+    if (err.name === 'CastError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
+    return res.status(SERVER_ERROR_CODE).send({
+      message: `Неизвестная ошибка ${err.name}: ${err.message}.
       Повторите запрос или обратитесь в поддержку`,
-  }));
+    });
+  });
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
@@ -48,7 +51,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
     return res.send(card);
   })
   .catch((err) => {
-    if (err.name === 'ValidationError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
+    if (err.name === 'CastError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
       message: `Неизвестная ошибка ${err.name}: ${err.message}.
       Повторите запрос или обратитесь в поддержку`,
@@ -65,7 +68,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
     return res.send(card);
   })
   .catch((err) => {
-    if (err.name === 'ValidationError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
+    if (err.name === 'CastError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
       message: `Неизвестная ошибка ${err.name}: ${err.message}.
       Повторите запрос или обратитесь в поддержку`,

@@ -15,15 +15,24 @@ module.exports.getAllUsers = (req, res) => User.find({})
       Повторите запрос или обратитесь в поддержку`,
   }));
 
-module.exports.getUserById = (req, res) => User.findById(req.user._id)
+module.exports.getUserById = (req, res) => User.findById(req.params.userId)
   .then((user) => {
-    if (!user) return res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемый пользователь не найден' });
-    return res.send(user);
+    if (!user) return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
+    const resUser = {
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+    };
+    return res.send(resUser);
   })
-  .catch((err) => res.status(SERVER_ERROR_CODE).send({
-    message: `Неизвестная ошибка ${err.name}: ${err.message}.
+  .catch((err) => {
+    if (err.name === 'CastError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
+    return res.status(SERVER_ERROR_CODE).send({
+      message: `Неизвестная ошибка ${err.name}: ${err.message}.
       Повторите запрос или обратитесь в поддержку`,
-  }));
+    });
+  });
 
 module.exports.createUser = (req, res) => User.create({ ...req.body })
   .then((user) => res.send(user))
