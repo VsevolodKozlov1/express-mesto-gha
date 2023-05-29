@@ -47,7 +47,10 @@ module.exports.createUser = (req, res) => User.create({ ...req.body })
 module.exports.updateProfile = (req, res) => User.findByIdAndUpdate(
   req.user._id,
   { ...req.body },
-  { new: true },
+  {
+    new: true,
+    runValidators: true,
+  },
 )
   .then((user) => {
     if (!user) return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
@@ -64,7 +67,10 @@ module.exports.updateProfile = (req, res) => User.findByIdAndUpdate(
 module.exports.updateAvatar = (req, res) => User.findByIdAndUpdate(
   req.user._id,
   { ...req.body },
-  { new: true },
+  {
+    new: true,
+    runValidators: true,
+  },
 )
   .then((user) => {
     if (!user) return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
