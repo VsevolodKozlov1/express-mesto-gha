@@ -6,13 +6,9 @@ const {
 } = require('../utils/errors');
 
 module.exports.getAllUsers = (req, res) => User.find({})
-  .then((users) => {
-    if (users.length === 0) return res.status(NOT_FOUND_CODE).send({ message: 'Пользователи не найдены' });
-    return res.send(users);
-  })
-  .catch((err) => res.status(SERVER_ERROR_CODE).send({
-    message: `Неизвестная ошибка ${err.name}: ${err.message}.
-      Повторите запрос или обратитесь в поддержку`,
+  .then((users) => res.send(users))
+  .catch(() => res.status(SERVER_ERROR_CODE).send({
+    message: 'Неизвестная ошибка. Повторите запрос или обратитесь в поддержку',
   }));
 
 module.exports.getUserById = (req, res) => User.findById(req.params.userId)
@@ -29,24 +25,29 @@ module.exports.getUserById = (req, res) => User.findById(req.params.userId)
   .catch((err) => {
     if (err.name === 'CastError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
-      message: `Неизвестная ошибка ${err.name}: ${err.message}.
-      Повторите запрос или обратитесь в поддержку`,
+      message: 'Неизвестная ошибка. Повторите запрос или обратитесь в поддержку',
     });
   });
 
-module.exports.createUser = (req, res) => User.create({ ...req.body })
+module.exports.createUser = (req, res) => User.create({
+  name: req.body.name,
+  about: req.body.about,
+  avatar: req.body.avatar,
+})
   .then((user) => res.send(user))
   .catch((err) => {
     if (err.name === 'ValidationError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
-      message: `Неизвестная ошибка ${err.name}: ${err.message}.
-        Повторите запрос или обратитесь в поддержку`,
+      message: 'Неизвестная ошибка. Повторите запрос или обратитесь в поддержку',
     });
   });
 
 module.exports.updateProfile = (req, res) => User.findByIdAndUpdate(
   req.user._id,
-  { ...req.body },
+  {
+    name: req.body.name,
+    about: req.body.about,
+  },
   {
     new: true,
     runValidators: true,
@@ -59,14 +60,13 @@ module.exports.updateProfile = (req, res) => User.findByIdAndUpdate(
   .catch((err) => {
     if (err.name === 'ValidationError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
-      message: `Неизвестная ошибка ${err.name}: ${err.message}.
-      Повторите запрос или обратитесь в поддержку`,
+      message: 'Неизвестная ошибка. Повторите запрос или обратитесь в поддержку',
     });
   });
 
 module.exports.updateAvatar = (req, res) => User.findByIdAndUpdate(
   req.user._id,
-  { ...req.body },
+  { avatar: req.body.avatar },
   {
     new: true,
     runValidators: true,
@@ -79,7 +79,6 @@ module.exports.updateAvatar = (req, res) => User.findByIdAndUpdate(
   .catch((err) => {
     if (err.name === 'ValidationError') return res.status(BAD_REQUEST_CODE).send({ message: 'Некорректные данные в запросе' });
     return res.status(SERVER_ERROR_CODE).send({
-      message: `Неизвестная ошибка ${err.name}: ${err.message}.
-      Повторите запрос или обратитесь в поддержку`,
+      message: 'Неизвестная ошибка. Повторите запрос или обратитесь в поддержку',
     });
   });
