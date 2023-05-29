@@ -31,7 +31,7 @@ module.exports.createCard = (req, res) => Card.create({
 // Ошибка автотеста по работе метода "deleteCardById": "Удаленной карточки не должно быть в БД". Но:
 // 1. При проверке в своей БД "mestodb.cards" карточка удаляется;
 // 2. Запрос "getAllCards" после удаления карточек также выдает сообщение "Карточки не найдены".
-module.exports.deleteCardById = (req, res) => Card.findByIdAndRemove(req.params.cardId)
+module.exports.deleteCardById = (req, res) => Card.findByIdAndDelete(req.params.cardId)
   .then((card) => {
     if (!card) return res.status(NOT_FOUND_CODE).send({ message: 'Карточка не найдена' });
     return res.send(card);
