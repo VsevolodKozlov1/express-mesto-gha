@@ -1,9 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const {
+  celebrate,
+  Joi,
+  errors,
+} = require('celebrate');
 const routes = require('./routes');
+const { createUser, login } = require('./controllers/user');
+const auth = require('./middlewares/auth');
+const errHandler = require('./middlewares/err-handler');
 
 const { PORT = 3000 } = process.env;
 const limiter = rateLimit({
@@ -14,21 +23,34 @@ const limiter = rateLimit({
 });
 
 const app = express();
+
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(helmet());
 app.use(limiter);
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '646c76ef2260627a66ca4db3',
-  };
+app.post('/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+    }),
+  }), createUser);
 
-  next();
-});
+app.post('/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+    }),
+  }), login);
 
-app.use(bodyParser.json());
+app.use(auth);
 app.use(routes);
+app.use(errors());
+app.use(errHandler);
 
 app.listen(PORT, () => {
 });

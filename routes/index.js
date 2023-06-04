@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const userRouter = require('./user');
 const cardRouter = require('./card');
-const { NOT_FOUND_CODE } = require('../utils/errors');
+const NotFoundError = require('../errors/not-found-err');
 
 router.use(userRouter);
 router.use(cardRouter);
-router.all('/*', (req, res) => res.status(NOT_FOUND_CODE).send({ message: 'Указан неверный путь' }));
+router.all('/*', (req, res, next) => {
+    next(new NotFoundError('По данному адресу ничего не найдено!'));
+});
 
 module.exports = router;
