@@ -3,7 +3,7 @@ const validator = require('validator');
 
 function validateURL(input) {
   return validator.isURL(input);
-};
+}
 
 const { Schema } = mongoose;
 

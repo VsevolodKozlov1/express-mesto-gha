@@ -4,11 +4,11 @@ const bcrypt = require('bcryptjs');
 
 function validateEmail(input) {
   return validator.isEmail(input);
-};
+}
 
 function validateURL(input) {
   return validator.isURL(input);
-};
+}
 
 function validateStrongPassword(input) {
   return validator.isStrongPassword(input);
@@ -56,6 +56,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
