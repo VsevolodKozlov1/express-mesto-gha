@@ -40,10 +40,21 @@ module.exports.getUserById = (req, res, next) => User.findById(req.params.userId
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, SALT_ROUNDS)
     .then((hash) => User.create({
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
       email: req.body.email,
       password: hash,
     }))
-    .then((user) => res.send(user))
+    .then((user) => {
+      const userWOPassword = {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      };
+      return res.send(userWOPassword);
+    })
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с такой почтой уже существует'));
