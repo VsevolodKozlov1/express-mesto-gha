@@ -97,7 +97,6 @@ module.exports.updateAvatar = (req, res, next) => User.findByIdAndUpdate(
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
@@ -109,7 +108,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      }).send(res.body);
+      }).send(res.cookies.jwt);
     })
     .catch(() => {
       next(new UnauthorizedError('Вход в аккаунт не выполнен'));
