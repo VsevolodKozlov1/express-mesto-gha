@@ -1,12 +1,7 @@
 const router = require('express').Router();
-const {
-  celebrate,
-  Joi,
-  errors,
-} = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const urlRegExp = require('../utils/regexp');
 const auth = require('../middlewares/auth');
-const errHandler = require('../middlewares/err-handler');
 const { createUser, login } = require('../controllers/user');
 const userRouter = require('./user');
 const cardRouter = require('./card');
@@ -48,8 +43,5 @@ router.use(cardRouter);
 router.all('/*', (req, res, next) => {
   next(new NotFoundError('По данному адресу ничего не найдено!'));
 });
-
-router.use(errors());
-router.use(errHandler);
 
 module.exports = router;
