@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const UnauthorizedError = require('../errors/unauthorized-err');
+const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
 
@@ -59,6 +59,8 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с такой почтой уже существует'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные при регистрации'));
       } else {
         next(err);
       }
@@ -80,7 +82,13 @@ module.exports.updateProfile = (req, res, next) => User.findByIdAndUpdate(
     if (!user) throw new NotFoundError('Пользователь не найден');
     return res.send(user);
   })
-  .catch(next);
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      next(new BadRequestError('Некорректные данные при создании карточки'));
+    } else {
+      next(err);
+    }
+  });
 
 module.exports.updateAvatar = (req, res, next) => User.findByIdAndUpdate(
   req.user._id,
@@ -94,7 +102,13 @@ module.exports.updateAvatar = (req, res, next) => User.findByIdAndUpdate(
     if (!user) throw new NotFoundError('Пользователь не найден');
     return res.send(user);
   })
-  .catch(next);
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      next(new BadRequestError('Некорректные данные при создании карточки'));
+    } else {
+      next(err);
+    }
+  });
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -111,7 +125,5 @@ module.exports.login = (req, res, next) => {
         sameSite: true,
       }).send({ jwt: token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Вход в аккаунт не выполнен'));
-    });
+    .catch(next);
 };

@@ -1,6 +1,5 @@
 const ServerError = require('../errors/server-err');
 
-// eslint-disable-next-line no-unused-vars
 module.exports = (errInput, req, res, next) => {
   let errOutput = {};
   if (!errInput.statusCode) {
@@ -8,5 +7,6 @@ module.exports = (errInput, req, res, next) => {
   } else {
     errOutput = errInput;
   }
-  return res.status(errOutput.statusCode).send({ message: errOutput.message });
+  res.status(errOutput.statusCode).send({ message: errOutput.message });
+  next();
 };
