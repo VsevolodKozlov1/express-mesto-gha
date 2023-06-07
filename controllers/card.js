@@ -14,10 +14,11 @@ module.exports.createCard = (req, res, next) => Card.create({
   .then((card) => res.send(card))
   .catch(next);
 
-module.exports.deleteCardById = (req, res, next) => Card.findByIdAndDelete(req.params.cardId)
+module.exports.deleteCardById = (req, res, next) => Card.findById(req.params.cardId)
   .then((card) => {
     if (!card) throw new NotFoundError('Карточка не найдена');
-    if (card.owner !== req.user._id) throw new ForbiddenError('Невозможно удалить чужую карточку');
+    if (card.owner.toString() !== req.user._id) throw new ForbiddenError('Невозможно удалить чужую карточку');
+    Card.findByIdAndDelete(req.params.cardId);
     return res.send(card);
   })
   .catch(next);
