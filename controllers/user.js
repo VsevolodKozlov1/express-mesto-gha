@@ -108,7 +108,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      }).send(token);
+      }).send({ jwt: token });
     })
     .catch(() => {
       next(new UnauthorizedError('Вход в аккаунт не выполнен'));
